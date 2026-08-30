@@ -185,9 +185,12 @@ describe('The Unbound Mystic landing page', () => {
       'clamp(2.55rem, 5vw, 4.15rem)'
     );
     expect(getStyleValue(findStyleRule(rules, '.section-kicker', 'font-size').style, 'font-size')).toBe('14pt');
-    expect(getStyleValue(findStyleRule(rules, '.eyebrow', 'font-size').style, 'font-size')).toBe('0.72rem');
+    expect(getStyleValue(findStyleRule(rules, '.eyebrow', 'font-size').style, 'font-size')).toBe('14pt');
     expect(getStyleValue(findStyleRule(rules, '.service-tag', 'font-size').style, 'font-size')).toBe('14pt');
     expect(getStyleValue(findStyleRule(rules, '.guidance-label', 'font-size').style, 'font-size')).toBe('14pt');
+    expect(getStyleValue(findStyleRule(rules, '.hero-copy h1', 'font-size').style, 'font-size')).toBe(
+      'calc(clamp(3.2rem, 7vw, 6.2rem) - 4pt)'
+    );
     expect(findStyleRule(rules, '.services-shell')).toBeDefined();
     expect(getStyleValue(
       findStyleRule(rules, '.service-row-primary', 'grid-template-columns').style,
@@ -224,13 +227,16 @@ describe('The Unbound Mystic landing page', () => {
     const rules = loadStyleRules();
     const mediumLayout = findMediaRule(rules, '(max-width: 1100px)');
     const guidanceBreakpoint = findMediaRule(rules, '(max-width: 900px)');
+    const compactBreakpoint = findMediaRule(rules, '(max-width: 760px)');
 
     expect(findStyleRule(mediumLayout.cssRules, '.guidance-layout')).toBeUndefined();
     expect(guidanceBreakpoint).toBeDefined();
+    expect(compactBreakpoint).toBeDefined();
 
     const stackedLayout = findStyleRule(guidanceBreakpoint.cssRules, '.guidance-layout').style;
     const stackedVisual = findStyleRule(guidanceBreakpoint.cssRules, '.guidance-visual').style;
     const stackedImage = findStyleRule(guidanceBreakpoint.cssRules, '.guidance-visual img').style;
+    const compactHero = findStyleRule(compactBreakpoint.cssRules, '.hero-copy h1', 'font-size').style;
 
     expect(getStyleValue(stackedLayout, 'grid-template-columns')).toBe('1fr');
     expect(getStyleValue(stackedVisual, 'position')).toBe('static');
@@ -238,6 +244,7 @@ describe('The Unbound Mystic landing page', () => {
     expect(getStyleValue(stackedVisual, 'max-width')).toBe('36rem');
     expect(getStyleValue(stackedVisual, 'justify-self')).toBe('center');
     expect(getStyleValue(stackedImage, 'aspect-ratio')).toBe('4 / 3');
+    expect(getStyleValue(compactHero, 'font-size')).toBe('calc(clamp(2.7rem, 14vw, 4.4rem) - 4pt)');
   });
 
   test('keeps reveal sections visible until JavaScript enhancement runs', () => {
