@@ -215,6 +215,10 @@ describe('The Unbound Mystic landing page', () => {
     );
     expect(getStyleValue(findStyleRule(rules, '.brand-mark', 'gap').style, 'gap')).toBe('0.75rem');
     expect(getStyleValue(findStyleRule(rules, '.brand-mark', 'padding-left').style, 'padding-left')).toBe('0.4rem');
+    expect(getStyleValue(findStyleRule(rules, '.topnav a', 'font-family').style, 'font-family')).toBe(
+      '"Manrope", sans-serif'
+    );
+    expect(getStyleValue(findStyleRule(rules, '.topnav', 'padding-right').style, 'padding-right')).toBe('0.4rem');
     expect(getStyleValue(findStyleRule(rules, '.footer-brand', 'flex-direction').style, 'flex-direction')).toBe('column');
     expect(findStyleRule(rules, '.services-shell')).toBeDefined();
     expect(getStyleValue(
