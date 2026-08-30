@@ -1,0 +1,13 @@
+{
+  "name": "the-unbound-mystic",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "build:preview": "node build-preview.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0",
+    "vitest": "^2.1.9"
+  }
+}
