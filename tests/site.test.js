@@ -181,7 +181,9 @@ describe('The Unbound Mystic landing page', () => {
   test('includes the refreshed layout and typography CSS hooks', () => {
     const rules = loadStyleRules();
 
-    expect(findStyleRule(rules, ':root').style.getPropertyValue('--section-heading-size')).toBeTruthy();
+    expect(findStyleRule(rules, ':root').style.getPropertyValue('--section-heading-size')).toBe(
+      'clamp(5.1rem, 10vw, 8.3rem)'
+    );
     expect(findStyleRule(rules, '.services-shell')).toBeDefined();
     expect(getStyleValue(
       findStyleRule(rules, '.service-row-primary', 'grid-template-columns').style,

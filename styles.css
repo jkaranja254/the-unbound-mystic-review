@@ -18,7 +18,7 @@
   --border: rgba(216, 176, 106, 0.26);
   --shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
   --max-width: 1200px;
-  --section-heading-size: clamp(2.55rem, 5vw, 4.15rem);
+  --section-heading-size: clamp(5.1rem, 10vw, 8.3rem);
 }
 
 html {
