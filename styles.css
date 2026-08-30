@@ -127,14 +127,14 @@ main section {
   font-size: clamp(3.2rem, 7vw, 6.2rem);
 }
 
-.eyebrow,
-.service-tag,
-.guidance-label {
+.eyebrow {
   color: var(--gold);
   font-size: 0.72rem;
 }
 
-.section-kicker {
+.section-kicker,
+.service-tag,
+.guidance-label {
   color: var(--gold);
   font-size: 14pt;
 }
