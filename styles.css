@@ -111,8 +111,13 @@ a {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  padding-right: 0.4rem;
   font-size: 0.78rem;
   color: var(--muted);
+}
+
+.topnav a {
+  font-family: "Manrope", sans-serif;
 }
 
 main section {
