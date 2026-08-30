@@ -9,7 +9,8 @@ const filesToCopy = [
   'script.js',
   'guidance-symbolic.webp',
   'IMG-20260820-WA0064.jpg',
-  'IMG-20260820-WA0065.jpg'
+  'IMG-20260820-WA0065.jpg',
+  'unbound-mystic-logo.png'
 ];
 
 await rm(distPath, { recursive: true, force: true });

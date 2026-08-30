@@ -146,6 +146,28 @@ describe('The Unbound Mystic landing page', () => {
     );
   });
 
+  test('renders the approved logo lockups in the header and footer', () => {
+    const document = loadDocument();
+    const headerBrand = document.querySelector('header .brand-mark');
+    const headerLogo = headerBrand.querySelector('img.brand-logo');
+    const headerText = headerBrand.querySelector('.brand-wordmark');
+    const footerBrand = document.querySelector('.footer-brand');
+    const footerLogo = footerBrand.querySelector('img.brand-logo');
+    const footerText = footerBrand.querySelector('.footer-brand-text');
+
+    expect(headerLogo).not.toBeNull();
+    expect(headerLogo.getAttribute('src')).toBe('unbound-mystic-logo.png');
+    expect(headerLogo.getAttribute('alt')).toBe('The Unbound Mystic logo');
+    expect(headerBrand.firstElementChild).toBe(headerLogo);
+    expect(headerText.textContent).toBe('THE UNBOUND MYSTIC');
+
+    expect(footerLogo).not.toBeNull();
+    expect(footerLogo.getAttribute('src')).toBe('unbound-mystic-logo.png');
+    expect(footerLogo.getAttribute('alt')).toBe('The Unbound Mystic logo');
+    expect(footerBrand.firstElementChild).toBe(footerLogo);
+    expect(footerText.textContent).toBe('THE UNBOUND MYSTIC');
+  });
+
   test('renders the Inquiry section as intro plus form only', () => {
     const document = loadDocument();
     const layout = document.querySelector('#inquiry > .inquiry-layout');
@@ -191,6 +213,9 @@ describe('The Unbound Mystic landing page', () => {
     expect(getStyleValue(findStyleRule(rules, '.hero-copy h1', 'font-size').style, 'font-size')).toBe(
       'calc(clamp(3.2rem, 7vw, 6.2rem) - 4pt)'
     );
+    expect(getStyleValue(findStyleRule(rules, '.brand-mark', 'gap').style, 'gap')).toBe('0.75rem');
+    expect(getStyleValue(findStyleRule(rules, '.brand-mark', 'padding-left').style, 'padding-left')).toBe('0.4rem');
+    expect(getStyleValue(findStyleRule(rules, '.footer-brand', 'flex-direction').style, 'flex-direction')).toBe('column');
     expect(findStyleRule(rules, '.services-shell')).toBeDefined();
     expect(getStyleValue(
       findStyleRule(rules, '.service-row-primary', 'grid-template-columns').style,
@@ -384,7 +409,8 @@ describe('The Unbound Mystic landing page', () => {
       'IMG-20260820-WA0065.jpg',
       'index.html',
       'script.js',
-      'styles.css'
+      'styles.css',
+      'unbound-mystic-logo.png'
     ];
 
     await mkdir(resolve(distPath, 'junk-folder'), { recursive: true });
