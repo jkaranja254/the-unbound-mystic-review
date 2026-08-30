@@ -184,7 +184,7 @@ describe('The Unbound Mystic landing page', () => {
     expect(findStyleRule(rules, ':root').style.getPropertyValue('--section-heading-size')).toBe(
       'clamp(2.55rem, 5vw, 4.15rem)'
     );
-    expect(getStyleValue(findStyleRule(rules, '.section-kicker', 'font-size').style, 'font-size')).toBe('1.44rem');
+    expect(getStyleValue(findStyleRule(rules, '.section-kicker', 'font-size').style, 'font-size')).toBe('14pt');
     expect(getStyleValue(findStyleRule(rules, '.eyebrow', 'font-size').style, 'font-size')).toBe('0.72rem');
     expect(getStyleValue(findStyleRule(rules, '.service-tag', 'font-size').style, 'font-size')).toBe('0.72rem');
     expect(getStyleValue(findStyleRule(rules, '.guidance-label', 'font-size').style, 'font-size')).toBe('0.72rem');
