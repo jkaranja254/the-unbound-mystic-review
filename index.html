@@ -26,7 +26,7 @@
         <nav class="topnav" aria-label="Primary">
           <a href="#services">Services</a>
           <a href="#guidance">Guidance</a>
-          <a href="#inquiry">Inquire</a>
+          <a href="#inquiry">Inquiry</a>
         </nav>
       </header>
 
@@ -39,8 +39,8 @@
               sovereign truth.
             </h1>
             <p class="hero-text">
-              The Unbound Mystic is a cinematic tarot experience for women seeking
-              honest insight in love, career, timing, and the deeper truths beneath
+              The Unbound Mystic offers tarot guidance for women seeking honest
+              insight in love, career, timing, and the deeper truths beneath
               repeating patterns.
             </p>
             <div class="hero-actions">
@@ -59,13 +59,6 @@
                 src="IMG-20260820-WA0065.jpg"
                 alt="The Unbound Mystic seated at a tarot table with candles and cards."
               />
-            </div>
-            <div class="floating-card">
-              <span class="floating-card-title">A sacred inquiry awaits</span>
-              <p>
-                For the woman choosing divine feminine clarity over confusion,
-                delay, and half-truths.
-              </p>
             </div>
           </div>
         </section>
@@ -173,10 +166,6 @@
               <div class="section-heading">
                 <p class="section-kicker">Choose the path</p>
                 <h2>Choose Your Guidance</h2>
-                <p>
-                  Inspired by Astrala's category-led flow, this section helps visitors
-                  find the reading aligned with what life is asking of them right now.
-                </p>
               </div>
               <div class="guidance-grid">
                 <a class="guidance-card" href="#service-love">
@@ -213,7 +202,6 @@
 
         <section id="trust" class="trust reveal">
           <div class="trust-copy">
-            <p class="section-kicker">Why work with her</p>
             <h2>Why Seek Guidance Here</h2>
             <p>
               This is for the woman who wants spiritual insight delivered with
@@ -222,6 +210,13 @@
               divine feminine clarity that helps you move with intention afterward.
             </p>
           </div>
+          <figure class="trust-visual">
+            <img
+              src="IMG-20260820-WA0064.jpg"
+              alt="A moody tarot still life with candles, crystals, and celestial motifs."
+              loading="lazy"
+            />
+          </figure>
           <div class="trust-points">
             <article>
               <h3>Thoughtful, not fear-driven</h3>
@@ -247,36 +242,14 @@
           </div>
         </section>
 
-        <section id="atmosphere" class="atmosphere reveal">
-          <div class="atmosphere-visual">
-            <img
-              src="IMG-20260820-WA0064.jpg"
-              alt="A moody tarot still life with candles, crystals, and celestial motifs."
-            />
-          </div>
-          <div class="atmosphere-copy">
-            <p class="section-kicker">The world of the brand</p>
-            <h2>Gold, burgundy, candlelight, and sacred softness with edge.</h2>
-            <p>
-              The visual language of The Unbound Mystic is sensual but not vague,
-              ornate but not cluttered. Roses, crystals, celestial symbols, rich
-              shadows, and warm gold detail all work together to create a sovereign
-              atmosphere that feels devotional rather than generic.
-            </p>
-            <blockquote>
-              “Intuitive. Magnetic. Powerful. Divine Feminine.”
-            </blockquote>
-          </div>
-        </section>
-
         <section id="inquiry" class="inquiry reveal">
           <div class="inquiry-layout">
             <div class="section-heading inquiry-intro">
               <p class="section-kicker">Begin the conversation</p>
               <h2>Tell me what you are seeking, and I will meet the question with care.</h2>
               <p>
-                Complete the form below to prepare your inquiry email. You will be
-                taken to your email app with the details already organized.
+                Readings are typically delivered within 3-5 business days after your
+                inquiry is received.
               </p>
             </div>
             <form
@@ -300,26 +273,27 @@
                   required
                 />
               </label>
-              <label>
-                Select your service
-                <select id="service" name="service" required>
-                  <option value="">Choose one</option>
-                  <option value="YES/NO Questions">YES/NO Questions</option>
-                  <option value="3-Month Forecast">3-Month Forecast</option>
-                  <option value="Love Reading">Love Reading</option>
-                  <option value="Money/Career Reading">Money/Career Reading</option>
-                  <option value="Deep Truth & Shadow Work">Deep Truth & Shadow Work</option>
-                </select>
-              </label>
+              <fieldset class="service-options" id="service-options">
+                <legend>Select your service</legend>
+                <div class="service-checkboxes">
+                  <label class="service-checkbox"><input name="services" type="checkbox" value="YES/NO Questions" />YES/NO Questions</label>
+                  <label class="service-checkbox"><input name="services" type="checkbox" value="3-Month Forecast" />3-Month Forecast</label>
+                  <label class="service-checkbox"><input name="services" type="checkbox" value="Love Reading" />Love Reading</label>
+                  <label class="service-checkbox"><input name="services" type="checkbox" value="Money/Career Reading" />Money/Career Reading</label>
+                  <label class="service-checkbox"><input name="services" type="checkbox" value="Deep Truth & Shadow Work" />Deep Truth & Shadow Work</label>
+                </div>
+              </fieldset>
               <label>
                 What would you like clarity on?
                 <textarea
                   id="focus"
                   name="focus"
                   rows="5"
+                  aria-describedby="focus-counter"
                   placeholder="Share the question, situation, or area of life you want the reading to explore."
                   required
                 ></textarea>
+                <span id="focus-counter" class="word-counter" aria-live="polite">0 / 80 words</span>
               </label>
               <label>
                 Timing or context
@@ -331,7 +305,7 @@
                 />
               </label>
               <button class="button button-primary form-button" type="submit">
-                Prepare My Inquiry Email
+                Submit
               </button>
             </form>
           </div>
@@ -344,8 +318,13 @@
           <span class="footer-brand-text">THE UNBOUND MYSTIC</span>
         </div>
         <p class="footer-copy">
-          Tarot guidance for clarity, timing, and sacred self-trust.
+          Intuitive. Magnetic. Powerful. Divine Feminine.
         </p>
+        <nav class="footer-legal" aria-label="Legal">
+          <a href="disclaimer.html" target="_blank" rel="noopener noreferrer">Disclaimer</a>
+          <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+          <a href="terms-of-service.html" target="_blank" rel="noopener noreferrer">Terms of Service</a>
+        </nav>
         <p class="footer-copyright">
           &copy; <span id="copyright-year">2026</span> The Unbound Mystic. All rights reserved.
         </p>

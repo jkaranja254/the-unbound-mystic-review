@@ -1,7 +1,13 @@
 const INQUIRY_EMAIL = 'hello@theunboundmystic.com';
+export const WORD_LIMIT = 80;
 
-export function buildInquiryMailto({ name, email, service, focus, timing }) {
-  const subject = encodeURIComponent(`The Unbound Mystic Inquiry: ${service}`);
+export function countWords(value) {
+  return value.trim() ? value.trim().split(/\s+/).length : 0;
+}
+
+export function buildInquiryMailto({ name, email, services = [], focus, timing }) {
+  const serviceList = services.join(', ');
+  const subject = encodeURIComponent(`The Unbound Mystic Inquiry: ${serviceList}`);
   const body = encodeURIComponent(
     [
       'Hello,',
@@ -10,7 +16,7 @@ export function buildInquiryMailto({ name, email, service, focus, timing }) {
       '',
       `Name: ${name}`,
       `Email: ${email}`,
-      `Service: ${service}`,
+      `Service: ${serviceList}`,
       `Focus Area: ${focus}`,
       `Timing / Context: ${timing || 'Not provided'}`,
       '',
@@ -28,8 +34,45 @@ export function initializeInquiryForm() {
     return;
   }
 
+  const focus = form.querySelector('#focus');
+  const counter = form.querySelector('#focus-counter');
+  const serviceInputs = Array.from(form.querySelectorAll('input[name="services"]'));
+
+  const updateWordCounter = () => {
+    const wordCount = countWords(focus?.value ?? '');
+    const isOverLimit = wordCount > WORD_LIMIT;
+
+    if (focus) {
+      focus.setCustomValidity(
+        isOverLimit ? `Please keep your response to ${WORD_LIMIT} words or fewer.` : ''
+      );
+    }
+
+    if (counter) {
+      counter.textContent = `${wordCount} / ${WORD_LIMIT} words`;
+      counter.classList.toggle('is-over-limit', isOverLimit);
+    }
+
+    return !isOverLimit;
+  };
+
+  const validateServices = () => {
+    const hasService = serviceInputs.some((input) => input.checked);
+
+    serviceInputs[0]?.setCustomValidity(hasService ? '' : 'Select at least one service.');
+    return hasService;
+  };
+
+  focus?.addEventListener('input', updateWordCounter);
+  serviceInputs.forEach((input) => input.addEventListener('change', validateServices));
+  updateWordCounter();
+
   form.addEventListener('submit', (event) => {
-    if (!form.checkValidity()) {
+    event.preventDefault();
+    const hasServices = validateServices();
+    const isWithinWordLimit = updateWordCounter();
+
+    if (!hasServices || !isWithinWordLimit || !form.checkValidity()) {
       form.reportValidity();
       return;
     }
@@ -39,7 +82,7 @@ export function initializeInquiryForm() {
     const payload = {
       name: document.querySelector('#name')?.value.trim() ?? '',
       email: document.querySelector('#email')?.value.trim() ?? '',
-      service: document.querySelector('#service')?.value ?? '',
+      services: serviceInputs.filter((input) => input.checked).map((input) => input.value),
       focus: document.querySelector('#focus')?.value.trim() ?? '',
       timing: document.querySelector('#timing')?.value.trim() ?? ''
     };
