@@ -495,7 +495,7 @@ main section {
 
 .trust {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(16rem, 0.8fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0, 1.7fr) minmax(18rem, 1fr);
   gap: 1.5rem;
   align-items: start;
 }
@@ -505,6 +505,7 @@ main section {
 }
 
 .trust-visual {
+  grid-column: 1;
   justify-self: stretch;
   width: 100%;
   margin: 0;
@@ -521,6 +522,8 @@ main section {
 }
 
 .trust-points {
+  grid-column: 2;
+  grid-row: 1 / span 2;
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;

@@ -323,13 +323,16 @@ describe('The Unbound Mystic landing page', () => {
 
     const trust = findStyleRule(rules, '.trust').style;
     const trustVisual = findStyleRule(rules, '.trust-visual').style;
-    const trustPoints = findStyleRule(rules, '.trust-points', 'grid-template-columns').style;
+    const trustPoints = findStyleRule(rules, '.trust-points').style;
 
     expect(getStyleValue(trust, 'grid-template-columns')).toBe(
-      'minmax(0, 0.9fr) minmax(16rem, 0.8fr) minmax(0, 1.1fr)'
+      'minmax(0, 1.7fr) minmax(18rem, 1fr)'
     );
     expect(getStyleValue(trustVisual, 'justify-self')).toBe('stretch');
     expect(getStyleValue(trustVisual, 'width')).toBe('100%');
+    expect(getStyleValue(trustVisual, 'grid-column')).toBe('1');
+    expect(getStyleValue(trustPoints, 'grid-column')).toBe('2');
+    expect(getStyleValue(trustPoints, 'grid-row')).toBe('1 / span 2');
     expect(getStyleValue(trustPoints, 'grid-template-columns')).toBe('1fr');
   });
 
