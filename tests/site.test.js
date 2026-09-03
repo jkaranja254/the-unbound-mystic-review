@@ -323,6 +323,7 @@ describe('The Unbound Mystic landing page', () => {
 
     const trust = findStyleRule(rules, '.trust').style;
     const trustVisual = findStyleRule(rules, '.trust-visual').style;
+    const trustImage = findStyleRule(rules, '.trust-visual img').style;
     const trustPoints = findStyleRule(rules, '.trust-points').style;
 
     expect(getStyleValue(trust, 'grid-template-columns')).toBe(
@@ -331,6 +332,7 @@ describe('The Unbound Mystic landing page', () => {
     expect(getStyleValue(trustVisual, 'justify-self')).toBe('stretch');
     expect(getStyleValue(trustVisual, 'width')).toBe('100%');
     expect(getStyleValue(trustVisual, 'grid-column')).toBe('1');
+    expect(getStyleValue(trustImage, 'aspect-ratio')).toBe('3 / 2');
     expect(getStyleValue(trustPoints, 'grid-column')).toBe('2');
     expect(getStyleValue(trustPoints, 'grid-row')).toBe('1 / span 2');
     expect(getStyleValue(trustPoints, 'grid-template-columns')).toBe('1fr');
