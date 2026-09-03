@@ -101,6 +101,46 @@ export function initializeFooterYear() {
   yearElement.textContent = String(new Date().getFullYear());
 }
 
+export function initializeSiteLoader() {
+  const loader = document.querySelector('#site-loader');
+
+  if (!loader || loader.dataset.initialized === 'true') {
+    return;
+  }
+
+  const percentage = loader.querySelector('#loading-percentage');
+  let progress = 0;
+  let timerId;
+
+  const updateProgress = (value) => {
+    progress = value;
+    percentage.textContent = String(progress);
+  };
+
+  const advanceProgress = () => {
+    updateProgress(Math.min(progress + 8, 92));
+
+    if (progress < 92) {
+      timerId = window.setTimeout(advanceProgress, 120);
+    }
+  };
+
+  const completeLoading = () => {
+    window.clearTimeout(timerId);
+    updateProgress(100);
+    loader.classList.add('is-complete');
+  };
+
+  loader.dataset.initialized = 'true';
+  timerId = window.setTimeout(advanceProgress, 120);
+
+  if (document.readyState === 'complete') {
+    completeLoading();
+  } else {
+    window.addEventListener('load', completeLoading, { once: true });
+  }
+}
+
 function initializeReveals() {
   const elements = document.querySelectorAll('.reveal');
 
@@ -135,5 +175,6 @@ function initializeReveals() {
 if (typeof document !== 'undefined') {
   initializeInquiryForm();
   initializeFooterYear();
+  initializeSiteLoader();
   initializeReveals();
 }
