@@ -247,6 +247,22 @@ describe('The Unbound Mystic landing page', () => {
     });
   });
 
+  test('provides detailed Texas and U.S. consumer legal information', () => {
+    const disclaimer = readFileSync(resolve(process.cwd(), 'disclaimer.html'), 'utf8');
+    const privacy = readFileSync(resolve(process.cwd(), 'privacy-policy.html'), 'utf8');
+    const terms = readFileSync(resolve(process.cwd(), 'terms-of-service.html'), 'utf8');
+
+    expect(disclaimer).toContain('not medical, mental health, legal, financial, investment');
+    expect(disclaimer).toContain('988');
+    expect(privacy).toContain('Texas Data Privacy and Security Act');
+    expect(privacy).toContain('California Privacy Rights');
+    expect(privacy).toContain('Privacy Appeal');
+    expect(terms).toContain('18 years of age');
+    expect(terms).toContain('Refunds and Cancellations');
+    expect(terms).toContain('Dallas, Texas');
+    expect(terms).toContain('non-waivable consumer rights');
+  });
+
   test('includes the refreshed layout and typography CSS hooks', () => {
     const rules = loadStyleRules();
 
@@ -292,6 +308,19 @@ describe('The Unbound Mystic landing page', () => {
     expect(getStyleValue(inquiryIntro, 'grid-column')).toBe('1 / -1');
     expect(getStyleValue(inquiryIntro, 'max-width')).toBe('none');
     expect(getStyleValue(inquiryIntro, 'width')).toBe('100%');
+    expect(getStyleValue(inquiryIntro, 'text-align')).toBe('center');
+
+    const trustCopy = findStyleRule(rules, '.trust-copy').style;
+    const trustVisual = findStyleRule(rules, '.trust-visual').style;
+    const trustPointsWidth = findStyleRule(rules, '.trust-points', 'grid-column').style;
+    const trustPointsGrid = findStyleRule(rules, '.trust-points', 'grid-template-columns').style;
+
+    expect(getStyleValue(trustCopy, 'grid-column')).toBe('1 / -1');
+    expect(getStyleValue(trustVisual, 'justify-self')).toBe('start');
+    expect(getStyleValue(trustPointsWidth, 'grid-column')).toBe('1 / -1');
+    expect(getStyleValue(trustPointsGrid, 'grid-template-columns')).toBe(
+      'repeat(3, minmax(0, 1fr))'
+    );
   });
 
   test('gives cards a gold hover and keyboard-focus glow', () => {
