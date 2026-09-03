@@ -121,6 +121,17 @@ describe('The Unbound Mystic landing page', () => {
     expect(document.body.textContent).not.toContain('A sacred inquiry awaits');
   });
 
+  test('includes a logo-based loading overlay with a percentage status', () => {
+    const document = loadDocument();
+    const loader = document.querySelector('#site-loader');
+
+    expect(loader).not.toBeNull();
+    expect(loader.getAttribute('role')).toBe('status');
+    expect(loader.getAttribute('aria-live')).toBe('polite');
+    expect(loader.querySelector('img').getAttribute('src')).toBe('unbound-mystic-logo.png');
+    expect(loader.querySelector('#loading-percentage').textContent).toBe('0');
+  });
+
   test('removes luxury language from the HTML', () => {
     expect(loadDocument().body.textContent).not.toMatch(/luxury/i);
   });
@@ -429,6 +440,22 @@ describe('The Unbound Mystic landing page', () => {
       global.Date = realGlobalDate;
       dom.window.Date = realWindowDate;
     }
+  });
+
+  test('completes and dismisses the site loader after the window load event', async () => {
+    const dom = new JSDOM(loadHtml(), {
+      url: 'http://localhost/'
+    });
+
+    global.window = dom.window;
+    global.document = dom.window.document;
+    const { initializeSiteLoader } = await import(`${scriptPath}?site-loader`);
+
+    initializeSiteLoader();
+    dom.window.dispatchEvent(new dom.window.Event('load'));
+
+    expect(document.querySelector('#loading-percentage').textContent).toBe('100');
+    expect(document.querySelector('#site-loader').classList.contains('is-complete')).toBe(true);
   });
 
   test('submitting the inquiry form opens the prepared inquiry email', async () => {
