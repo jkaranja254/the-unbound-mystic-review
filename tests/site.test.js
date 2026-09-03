@@ -310,17 +310,16 @@ describe('The Unbound Mystic landing page', () => {
     expect(getStyleValue(inquiryIntro, 'width')).toBe('100%');
     expect(getStyleValue(inquiryIntro, 'text-align')).toBe('center');
 
-    const trustCopy = findStyleRule(rules, '.trust-copy').style;
+    const trust = findStyleRule(rules, '.trust').style;
     const trustVisual = findStyleRule(rules, '.trust-visual').style;
-    const trustPointsWidth = findStyleRule(rules, '.trust-points', 'grid-column').style;
-    const trustPointsGrid = findStyleRule(rules, '.trust-points', 'grid-template-columns').style;
+    const trustPoints = findStyleRule(rules, '.trust-points', 'grid-template-columns').style;
 
-    expect(getStyleValue(trustCopy, 'grid-column')).toBe('1 / -1');
-    expect(getStyleValue(trustVisual, 'justify-self')).toBe('start');
-    expect(getStyleValue(trustPointsWidth, 'grid-column')).toBe('1 / -1');
-    expect(getStyleValue(trustPointsGrid, 'grid-template-columns')).toBe(
-      'repeat(3, minmax(0, 1fr))'
+    expect(getStyleValue(trust, 'grid-template-columns')).toBe(
+      'minmax(0, 0.9fr) minmax(16rem, 0.8fr) minmax(0, 1.1fr)'
     );
+    expect(getStyleValue(trustVisual, 'justify-self')).toBe('stretch');
+    expect(getStyleValue(trustVisual, 'width')).toBe('100%');
+    expect(getStyleValue(trustPoints, 'grid-template-columns')).toBe('1fr');
   });
 
   test('gives cards a gold hover and keyboard-focus glow', () => {

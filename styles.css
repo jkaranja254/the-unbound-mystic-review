@@ -443,23 +443,18 @@ main section {
 
 .trust {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 0.9fr) minmax(16rem, 0.8fr) minmax(0, 1.1fr);
   gap: 1.5rem;
   align-items: start;
 }
 
-.trust-copy,
-.trust-points {
-  grid-column: 1 / -1;
-}
-
 .trust-copy {
-  max-width: 52rem;
+  max-width: none;
 }
 
 .trust-visual {
-  justify-self: start;
-  width: min(24rem, 100%);
+  justify-self: stretch;
+  width: 100%;
   margin: 0;
   overflow: hidden;
   border: 1px solid var(--border);
@@ -475,7 +470,7 @@ main section {
 
 .trust-points {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 1rem;
 }
 
