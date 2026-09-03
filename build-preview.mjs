@@ -5,8 +5,11 @@ const projectRoot = process.cwd();
 const distPath = resolve(projectRoot, 'dist');
 const filesToCopy = [
   'index.html',
+  'disclaimer.html',
+  'privacy-policy.html',
   'styles.css',
   'script.js',
+  'terms-of-service.html',
   'guidance-symbolic.webp',
   'IMG-20260820-WA0064.jpg',
   'IMG-20260820-WA0065.jpg',

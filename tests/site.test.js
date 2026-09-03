@@ -11,6 +11,11 @@ const stylesPath = resolve(process.cwd(), 'styles.css');
 const packageJsonPath = resolve(process.cwd(), 'package.json');
 const buildPreviewPath = resolve(process.cwd(), 'build-preview.mjs');
 const distPath = resolve(process.cwd(), 'dist');
+const legalPagePaths = [
+  resolve(process.cwd(), 'disclaimer.html'),
+  resolve(process.cwd(), 'privacy-policy.html'),
+  resolve(process.cwd(), 'terms-of-service.html')
+];
 
 function loadHtml() {
   return readFileSync(htmlPath, 'utf8');
@@ -72,7 +77,6 @@ describe('The Unbound Mystic landing page', () => {
       'services',
       'guidance',
       'trust',
-      'atmosphere',
       'inquiry'
     ]);
   });
@@ -93,13 +97,28 @@ describe('The Unbound Mystic landing page', () => {
     expect(servicesText).toContain('$200');
   });
 
-  test('includes the editorial guidance and trust sections', () => {
+  test('uses the streamlined guidance and trust section copy', () => {
     const document = loadDocument();
+    const bodyText = document.body.textContent;
 
     expect(document.querySelector('#guidance').textContent).toContain('Choose Your Guidance');
     expect(document.querySelector('#trust').textContent).toContain('Why Seek Guidance Here');
-    expect(document.body.textContent).toContain('The Unbound Mystic');
-    expect(document.body.textContent).toContain('divine feminine');
+    expect(document.querySelector('#trust .section-kicker')).toBeNull();
+    expect(document.querySelector('#trust h2').textContent).toBe('Why Seek Guidance Here');
+    expect(document.querySelector('#trust .trust-visual img').getAttribute('src')).toBe(
+      'IMG-20260820-WA0064.jpg'
+    );
+    expect(document.querySelector('#atmosphere')).toBeNull();
+    expect(bodyText).not.toContain('Inspired by Astrala');
+    expect(bodyText).not.toContain('cinematic tarot experience');
+  });
+
+  test('uses Inquiry in the primary navigation and removes the hero text inset', () => {
+    const document = loadDocument();
+
+    expect(document.querySelector('.topnav a[href="#inquiry"]').textContent).toBe('Inquiry');
+    expect(document.querySelector('.hero-visual .floating-card')).toBeNull();
+    expect(document.body.textContent).not.toContain('A sacred inquiry awaits');
   });
 
   test('removes luxury language from the HTML', () => {
@@ -200,6 +219,34 @@ describe('The Unbound Mystic landing page', () => {
     expect(copyright.textContent).toContain('All rights reserved.');
   });
 
+  test('uses the approved footer line and legal links in new windows', () => {
+    const document = loadDocument();
+    const footer = document.querySelector('.footer');
+    const links = Array.from(footer.querySelectorAll('.footer-legal a'));
+
+    expect(footer.querySelector('.footer-copy').textContent.trim()).toBe(
+      'Intuitive. Magnetic. Powerful. Divine Feminine.'
+    );
+    expect(links.map((link) => link.getAttribute('href'))).toEqual([
+      'disclaimer.html',
+      'privacy-policy.html',
+      'terms-of-service.html'
+    ]);
+    expect(links.every((link) => link.getAttribute('target') === '_blank')).toBe(true);
+    expect(links.every((link) => link.getAttribute('rel') === 'noopener noreferrer')).toBe(true);
+  });
+
+  test('includes standalone legal documents', () => {
+    legalPagePaths.forEach((path) => {
+      const document = new JSDOM(readFileSync(path, 'utf8')).window.document;
+      const links = Array.from(document.querySelectorAll('.footer-legal a'));
+
+      expect(document.body.textContent).toContain('The Unbound Mystic');
+      expect(links).toHaveLength(3);
+      expect(links.every((link) => link.getAttribute('target') === '_blank')).toBe(true);
+    });
+  });
+
   test('includes the refreshed layout and typography CSS hooks', () => {
     const rules = loadStyleRules();
 
@@ -247,6 +294,17 @@ describe('The Unbound Mystic landing page', () => {
     expect(getStyleValue(inquiryIntro, 'width')).toBe('100%');
   });
 
+  test('gives cards a gold hover and keyboard-focus glow', () => {
+    const rules = loadStyleRules();
+    const hoverRule = findStyleRule(rules, '.service-card:hover', 'border-color');
+    const focusRule = findStyleRule(rules, '.guidance-card:focus-visible', 'box-shadow');
+
+    expect(hoverRule).toBeDefined();
+    expect(getStyleValue(hoverRule.style, 'border-color')).toBe('var(--gold-soft)');
+    expect(focusRule).toBeDefined();
+    expect(getStyleValue(focusRule.style, 'box-shadow')).toContain('rgba(216, 176, 106, 0.38)');
+  });
+
   test('removes deleted inquiry panel selectors from the stylesheet', () => {
     const rules = loadStyleRules();
 
@@ -292,19 +350,20 @@ describe('The Unbound Mystic landing page', () => {
     expect(getStyleValue(revealVisibleRule.style, 'opacity')).toBe('1');
   });
 
-  test('buildInquiryMailto encodes the inquiry email payload', async () => {
-    const { buildInquiryMailto } = await import(scriptPath);
+  test('buildInquiryMailto encodes every selected inquiry service', async () => {
+    const { buildInquiryMailto } = await import(`${scriptPath}?multiple-services`);
 
     const href = buildInquiryMailto({
       name: 'Ava',
       email: 'ava@example.com',
-      service: 'Love Reading',
+      services: ['Love Reading', '3-Month Forecast'],
       focus: 'Need clarity about a relationship',
       timing: 'This month'
     });
 
     expect(href).toContain('mailto:hello@theunboundmystic.com');
     expect(href).toContain('Love%20Reading');
+    expect(href).toContain('3-Month%20Forecast');
     expect(href).toContain('Need%20clarity%20about%20a%20relationship');
     expect(href).toContain('This%20month');
   });
@@ -357,7 +416,7 @@ describe('The Unbound Mystic landing page', () => {
 
     document.querySelector('#name').value = 'Ava';
     document.querySelector('#email').value = 'ava@example.com';
-    document.querySelector('#service').value = 'Love Reading';
+    document.querySelector('input[name="services"][value="Love Reading"]').checked = true;
     document.querySelector('#focus').value = 'Need clarity about a relationship';
     document.querySelector('#timing').value = 'This month';
 
@@ -369,12 +428,41 @@ describe('The Unbound Mystic landing page', () => {
       buildInquiryMailto({
         name: 'Ava',
         email: 'ava@example.com',
-        service: 'Love Reading',
+        services: ['Love Reading'],
         focus: 'Need clarity about a relationship',
         timing: 'This month'
       }),
       '_self'
     );
+
+    openSpy.mockRestore();
+  });
+
+  test('counts inquiry words and blocks an over-limit submission', async () => {
+    const dom = new JSDOM(loadHtml(), {
+      url: 'http://localhost/'
+    });
+
+    global.window = dom.window;
+    global.document = dom.window.document;
+    const openSpy = vi.spyOn(dom.window, 'open').mockImplementation(() => null);
+    const { countWords, WORD_LIMIT } = await import(`${scriptPath}?word-limit`);
+    const form = document.querySelector('#inquiry-form');
+    const focus = document.querySelector('#focus');
+
+    expect(WORD_LIMIT).toBe(80);
+    expect(countWords('  one\n two   three ')).toBe(3);
+
+    document.querySelector('#name').value = 'Ava';
+    document.querySelector('#email').value = 'ava@example.com';
+    document.querySelector('input[name="services"][value="Love Reading"]').checked = true;
+    focus.value = Array.from({ length: WORD_LIMIT + 1 }, (_, index) => `word${index}`).join(' ');
+    focus.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+    form.dispatchEvent(new dom.window.Event('submit', { bubbles: true, cancelable: true }));
+
+    expect(document.querySelector('#focus-counter').textContent).toContain('81 / 80 words');
+    expect(focus.validationMessage).toContain('80 words');
+    expect(openSpy).not.toHaveBeenCalled();
 
     openSpy.mockRestore();
   });
@@ -399,7 +487,7 @@ describe('The Unbound Mystic landing page', () => {
     expect(form.checkValidity()).toBe(false);
     expect(reportValiditySpy).toHaveBeenCalledTimes(1);
     expect(openSpy).not.toHaveBeenCalled();
-    expect(submitEvent.defaultPrevented).toBe(false);
+    expect(submitEvent.defaultPrevented).toBe(true);
 
     reportValiditySpy.mockRestore();
     openSpy.mockRestore();
@@ -411,12 +499,15 @@ describe('The Unbound Mystic landing page', () => {
 
   test('preview build recreates dist with only the deployable site assets', async () => {
     const expectedFiles = [
+      'disclaimer.html',
       'guidance-symbolic.webp',
       'IMG-20260820-WA0064.jpg',
       'IMG-20260820-WA0065.jpg',
       'index.html',
+      'privacy-policy.html',
       'script.js',
       'styles.css',
+      'terms-of-service.html',
       'unbound-mystic-logo.png'
     ];
 
