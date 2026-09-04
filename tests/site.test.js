@@ -297,6 +297,16 @@ describe('The Unbound Mystic landing page', () => {
     expect(getStyleValue(findStyleRule(rules, '.topnav a', 'color').style, 'color')).toBe('var(--gold-soft)');
     expect(getStyleValue(findStyleRule(rules, '.topnav', 'padding-right').style, 'padding-right')).toBe('0.9rem');
     expect(getStyleValue(findStyleRule(rules, '.footer-brand', 'flex-direction').style, 'flex-direction')).toBe('column');
+
+    const headerWordmark = findStyleRule(rules, '.brand-wordmark', 'font-family').style;
+    const footerWordmark = findStyleRule(rules, '.footer-brand-text', 'font-family').style;
+    expect(getStyleValue(headerWordmark, 'font-family')).toBe('"Cormorant Garamond", serif');
+    expect(getStyleValue(footerWordmark, 'font-family')).toBe('"Cormorant Garamond", serif');
+    expect(getStyleValue(headerWordmark, 'font-size')).toBe('1.2rem');
+    expect(getStyleValue(footerWordmark, 'font-size')).toBe('1.2rem');
+    expect(getStyleValue(headerWordmark, 'font-weight')).toBe('700');
+    expect(getStyleValue(footerWordmark, 'font-weight')).toBe('700');
+
     expect(findStyleRule(rules, '.services-shell')).toBeDefined();
     expect(getStyleValue(
       findStyleRule(rules, '.service-row-primary', 'grid-template-columns').style,
