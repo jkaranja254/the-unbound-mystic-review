@@ -557,6 +557,7 @@ main section {
   display: grid;
   gap: 1rem;
   max-width: 52rem;
+  justify-self: center;
 }
 
 .inquiry-form label {

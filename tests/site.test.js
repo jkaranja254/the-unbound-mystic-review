@@ -321,6 +321,9 @@ describe('The Unbound Mystic landing page', () => {
     expect(getStyleValue(inquiryIntro, 'width')).toBe('100%');
     expect(getStyleValue(inquiryIntro, 'text-align')).toBe('center');
 
+    const inquiryForm = findStyleRule(rules, '.inquiry-form', 'justify-self').style;
+    expect(getStyleValue(inquiryForm, 'justify-self')).toBe('center');
+
     const trust = findStyleRule(rules, '.trust').style;
     const trustVisual = findStyleRule(rules, '.trust-visual').style;
     const trustImage = findStyleRule(rules, '.trust-visual img').style;
