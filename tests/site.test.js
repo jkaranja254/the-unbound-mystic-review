@@ -132,6 +132,15 @@ describe('The Unbound Mystic landing page', () => {
     expect(loader.querySelector('#loading-percentage').textContent).toBe('0');
   });
 
+  test('includes an accessible back-to-top control', () => {
+    const button = loadDocument().querySelector('#back-to-top');
+
+    expect(button).not.toBeNull();
+    expect(button.tagName).toBe('BUTTON');
+    expect(button.getAttribute('type')).toBe('button');
+    expect(button.getAttribute('aria-label')).toBe('Back to top');
+  });
+
   test('removes luxury language from the HTML', () => {
     expect(loadDocument().body.textContent).not.toMatch(/luxury/i);
   });
@@ -333,6 +342,13 @@ describe('The Unbound Mystic landing page', () => {
 
     const inquiryForm = findStyleRule(rules, '.inquiry-form', 'justify-self').style;
     expect(getStyleValue(inquiryForm, 'justify-self')).toBe('center');
+    expect(getStyleValue(inquiryForm, 'width')).toBe('min(100%, 47rem)');
+
+    expect(getStyleValue(findStyleRule(rules, '.page-shell', 'padding-bottom').style, 'padding-bottom')).toBe('2rem');
+    expect(getStyleValue(findStyleRule(rules, '.site-loader img', 'width').style, 'width')).toBe(
+      'clamp(7rem, 16vw, 10rem)'
+    );
+    expect(findStyleRule(rules, '.back-to-top')).toBeDefined();
 
     const trust = findStyleRule(rules, '.trust').style;
     const trustVisual = findStyleRule(rules, '.trust-visual').style;
@@ -460,20 +476,55 @@ describe('The Unbound Mystic landing page', () => {
     }
   });
 
-  test('completes and dismisses the site loader after the window load event', async () => {
+  test('keeps the site loader visible for its minimum display duration', async () => {
     const dom = new JSDOM(loadHtml(), {
       url: 'http://localhost/'
     });
 
     global.window = dom.window;
     global.document = dom.window.document;
-    const { initializeSiteLoader } = await import(`${scriptPath}?site-loader`);
+    vi.useFakeTimers();
 
-    initializeSiteLoader();
-    dom.window.dispatchEvent(new dom.window.Event('load'));
+    try {
+      const { initializeSiteLoader, LOADER_MINIMUM_DURATION } = await import(`${scriptPath}?site-loader`);
 
-    expect(document.querySelector('#loading-percentage').textContent).toBe('100');
-    expect(document.querySelector('#site-loader').classList.contains('is-complete')).toBe(true);
+      initializeSiteLoader();
+      dom.window.dispatchEvent(new dom.window.Event('load'));
+
+      expect(LOADER_MINIMUM_DURATION).toBe(2500);
+      expect(document.querySelector('#site-loader').classList.contains('is-complete')).toBe(false);
+
+      await vi.advanceTimersByTimeAsync(LOADER_MINIMUM_DURATION);
+
+      expect(document.querySelector('#loading-percentage').textContent).toBe('100');
+      expect(document.querySelector('#site-loader').classList.contains('is-complete')).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  test('reveals and operates the back-to-top control after scrolling', async () => {
+    const dom = new JSDOM(loadHtml(), {
+      url: 'http://localhost/'
+    });
+
+    global.window = dom.window;
+    global.document = dom.window.document;
+    Object.defineProperty(dom.window, 'scrollY', { configurable: true, value: 0, writable: true });
+    const scrollToSpy = vi.fn();
+    dom.window.scrollTo = scrollToSpy;
+    const { initializeBackToTop } = await import(`${scriptPath}?back-to-top`);
+
+    initializeBackToTop();
+    const button = document.querySelector('#back-to-top');
+    expect(button.classList.contains('is-visible')).toBe(false);
+
+    dom.window.scrollY = 600;
+    dom.window.dispatchEvent(new dom.window.Event('scroll'));
+    expect(button.classList.contains('is-visible')).toBe(true);
+
+    button.click();
+    expect(scrollToSpy).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
   });
 
   test('submitting the inquiry form opens the prepared inquiry email', async () => {
