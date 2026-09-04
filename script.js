@@ -1,5 +1,6 @@
 const INQUIRY_EMAIL = 'hello@theunboundmystic.com';
 export const WORD_LIMIT = 80;
+export const LOADER_MINIMUM_DURATION = 2500;
 
 export function countWords(value) {
   return value.trim() ? value.trim().split(/\s+/).length : 0;
@@ -108,9 +109,13 @@ export function initializeSiteLoader() {
     return;
   }
 
+  const browserWindow = window;
   const percentage = loader.querySelector('#loading-percentage');
+  const startedAt = Date.now();
   let progress = 0;
   let timerId;
+  let completionTimerId;
+  let hasCompleted = false;
 
   const updateProgress = (value) => {
     progress = value;
@@ -121,24 +126,53 @@ export function initializeSiteLoader() {
     updateProgress(Math.min(progress + 8, 92));
 
     if (progress < 92) {
-      timerId = window.setTimeout(advanceProgress, 120);
+      timerId = browserWindow.setTimeout(advanceProgress, 120);
     }
   };
 
   const completeLoading = () => {
-    window.clearTimeout(timerId);
-    updateProgress(100);
-    loader.classList.add('is-complete');
+    if (hasCompleted || completionTimerId !== undefined) {
+      return;
+    }
+
+    const remainingDuration = Math.max(0, LOADER_MINIMUM_DURATION - (Date.now() - startedAt));
+    completionTimerId = browserWindow.setTimeout(() => {
+      hasCompleted = true;
+      browserWindow.clearTimeout(timerId);
+      updateProgress(100);
+      loader.classList.add('is-complete');
+    }, remainingDuration);
   };
 
   loader.dataset.initialized = 'true';
-  timerId = window.setTimeout(advanceProgress, 120);
+  timerId = browserWindow.setTimeout(advanceProgress, 120);
 
   if (document.readyState === 'complete') {
     completeLoading();
   } else {
-    window.addEventListener('load', completeLoading, { once: true });
+    browserWindow.addEventListener('load', completeLoading, { once: true });
   }
+}
+
+export function initializeBackToTop() {
+  const button = document.querySelector('#back-to-top');
+
+  if (!button || button.dataset.initialized === 'true') {
+    return;
+  }
+
+  const browserWindow = window;
+  const updateVisibility = () => {
+    button.classList.toggle('is-visible', browserWindow.scrollY > 500);
+  };
+
+  button.dataset.initialized = 'true';
+  browserWindow.addEventListener('scroll', updateVisibility, { passive: true });
+  button.addEventListener('click', () => {
+    const prefersReducedMotion = browserWindow.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    browserWindow.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+  });
+  updateVisibility();
 }
 
 function initializeReveals() {
@@ -176,5 +210,6 @@ if (typeof document !== 'undefined') {
   initializeInquiryForm();
   initializeFooterYear();
   initializeSiteLoader();
+  initializeBackToTop();
   initializeReveals();
 }
